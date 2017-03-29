@@ -42,6 +42,8 @@ app.listen(3000, () => {
     console.log('Starting Port 3000');
 });
 
+module.exports = {app};
+
 // httpstatuses.com
 
 /**we r using the post route, inside ur rest api there is basic crud operation */
