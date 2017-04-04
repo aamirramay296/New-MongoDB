@@ -75,25 +75,16 @@ describe('POST /todos ', () => {
             });
     });
 
-   describe('Testing the Get ', () => {
+   describe('GET / todos ', () => {
+
         it('testing the get ', (done) => {
             request(app)
                 .get('/todos')
                 .expect(200)
-                .end((err,res) => {
-
-                    if(err) {
-                        return console.log(err);
-                    }
-
-                    Todo.find().then((todos) => {
-
-                        expect(todos.length).toBe(2);
-                       
-                        done();
-                    }).catch((e) => done(e));
-                
-                });
+                .expect((res) => {
+                    expect(res.body.todos.length).toBe(2);
+                })
+                .end(done);
         });
    });
 });
