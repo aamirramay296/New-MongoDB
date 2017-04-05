@@ -26,6 +26,10 @@ beforeEach((done) => {
 
 }); 
 
+    /**-------------------- */
+    /* POST / todos */
+    /**------------------- */
+
 describe('POST /todos ', () => {
     it('should create a new todo', (done) => { // this is a async test 
         var text  = 'Text todo text';
@@ -92,7 +96,10 @@ describe('POST /todos ', () => {
         });
    });
 
-   describe('GET/ todos/:id', () => {
+    /**-------------------- */
+    /* GET / todos/: id */
+    /**------------------- */
+ describe('GET/ todos/:id', () => {
        
     it('should return todo doc', (done) => {
         request(app)
@@ -119,4 +126,45 @@ describe('POST /todos ', () => {
 
       });
    });
+
+   /**-------------------- */
+    /* DELETE / todos/: id */
+    /**------------------- */
+   describe('DELETE/todos/:id', () => {
+
+    it('should return remove a todo doc', (done) => {
+
+        request(app)
+            .delete(`/todos/${todos[1]._id.toHexString()}`)
+            .expect(200)
+            .expect((res) => {
+
+                expect(res.body.todo._id).toBe(`${todos[1]._id.toHexString()}`);
+            })
+            .end((err ,res) => {
+                if(err) {
+                    return done(err);
+                }
+                
+                Todo.findById(`${todos[1]._id.toHexString()}`).then((todo) => {
+                    expect(todo).toNotExist();
+                    done();
+                }).catch((e) => done(e));
+            });
+    });
+
+    it('should return 404 of todo not found', (done) => {
+        request(app)
+            .delete(`/todos/${new ObjectID().toHexString()}`)
+            .expect(404)
+            .end(done);
+    });
+
+    it('should return 404 if object id is invalid', (done)=> {
+        request(app)
+            .delete('/todos/123abc')
+            .expect(404)
+            .end(done);
+    });
+  });
 });

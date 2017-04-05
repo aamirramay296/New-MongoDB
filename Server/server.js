@@ -10,6 +10,7 @@ var {user} = require('./models/user');
 // the server file is responsible for our routes ...
 var app = express();
 
+const port = process.env.PORT || 3000;
 //if we r using cutom middleware it will be a function
 app.use(bodyParser.json()); // middleware we need to give to express ...
 
@@ -66,6 +67,7 @@ app.get('/todos/:id', (req, res) => {
        if(!todo) {
              return res.status(404).send();
         }
+
        res.send({todo}); // same res.send({todo: todo});
 
     }).catch((e) => {
@@ -73,10 +75,30 @@ app.get('/todos/:id', (req, res) => {
     });
 });
 
+   /*... Deleting the Doc ... */
+app.delete('/todos/:id', (req, res) => {
+    var id = req.params.id;
 
-app.listen(3000, () => {
+    if(!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
 
-    console.log('Starting Port 3000');
+    Todo.findByIdAndRemove(id).then((todo) => {
+        
+        if(!todo) {
+            return res.status(404).send();
+        }
+
+         res.send({todo});
+
+    }).catch((e) => {
+        res.status(400).send();
+    });
+});
+
+    /* ... Port 3000 ... */
+app.listen(port, () => {
+    console.log(`Started up a port ${port}`);
 });
 
 module.exports = {app};
