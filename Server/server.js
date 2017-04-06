@@ -1,3 +1,5 @@
+require('./config/config');
+
 const _ = require('lodash');
 
 const express = require('express');
@@ -12,7 +14,7 @@ const {user} = require('./models/user');
 // the server file is responsible for our routes ...
 var app = express();
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 //if we r using cutom middleware it will be a function
 app.use(bodyParser.json()); // middleware we need to give to express ...
 
